@@ -53,8 +53,6 @@ Route::apiResource('events.attendees', AttendeeController::class)
     ->only(['index', 'show']);
 
 
-Route::post('/incoming-email', [IncomingEmailController::class, 'store']);
-
 Route::post('/send-email', [EmailController::class, 'sendReminder'])
     ->middleware(['auth:sanctum', 'throttle:api']);
 

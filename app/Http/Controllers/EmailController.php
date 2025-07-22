@@ -12,8 +12,6 @@ class EmailController extends Controller
     {
     $user = \App\Models\User::first();
     $event = \App\Models\Event::first();
-        // $user = User::where('email', 'mikelawlorarb@outlook.com')->first();
-        //     $event = Event::first();
 
             if (!$user || !$event) {
                 return response()->json(['error' => 'User or Event not found'], 404);

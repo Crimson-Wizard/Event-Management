@@ -53,9 +53,10 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
+
+        Gate::authorize('view', $event);
         $event->load('user', 'attendees');
         
-        Gate::authorize('view', $event);
         return new EventResource(
             $this->loadRelationships($event)
         );

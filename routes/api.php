@@ -3,8 +3,12 @@
 use App\Http\Controllers\Api\AttendeeController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\IncomingEmailController;
+use App\Notifications\EventReminderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +51,11 @@ Route::apiResource('events.attendees', AttendeeController::class)
 Route::apiResource('events.attendees', AttendeeController::class)
     ->scoped()
     ->only(['index', 'show']);
+
+
+Route::post('/incoming-email', [IncomingEmailController::class, 'store']);
+
+Route::post('/send-email', [EmailController::class, 'sendReminder'])
+    ->middleware(['auth:sanctum', 'throttle:api']);
+
 

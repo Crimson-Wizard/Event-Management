@@ -1,55 +1,40 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ForwardedEmail;
-use App\Models\ParentEmail;
-use BeyondCode\Mailbox\Facades\Mailbox;
-use BeyondCode\Mailbox\InboundEmail;
-use Illuminate\Mail\Attachment;
-// use App\Http\Controllers\MailgunController;
-use BeyondCode\Mailbox\Http\Controllers\MailgunController;
+// use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\DB;
+// use App\Models\ParentEmail;
+// use App\Models\ChildEmail;
+// use BeyondCode\Mailbox\Facades\Mailbox;
+// use BeyondCode\Mailbox\InboundEmail;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post(
-    'laravel-mailbox/mailgun/mime',
-    MailgunController::class
-);
-
-// this collects the email and build into arrays to then go to forwardemail.php that constructs the forwarded emails.
-// question: if emails are password protected then how does this work?
+// // Main inbound email forwarding logic
+// // 
 
 // Mailbox::from('{any}@sandbox8404ad9885484827b737ba4dcaf6007d.mailgun.org', function (InboundEmail $email) {
-//     // $subject = $email->subject();
-//     // $body = $email->text();
 
-//     // $attachments = collect($email->attachments())->map(function ($attachment) {
-//     //     return Attachment::fromPath($attachment->getPath())
-//     //         ->as($attachment->getFilename())
-//     //         ->withMime($attachment->getMimeType());
-//     // })->toArray();
+//     $from = $email->from()[0]->getEmail();
+//     $to   = $email->to()[0]->getEmail();
+//     $subject = $email->subject();
 
-// add emails to be forwarded to 
-// $recipients = ['test1@outlook.com', 'test2@outlook.com', 'test3@outlook.com'];
-// foreach ($recipients as $recipient) {
+//     // save a row even if forwarding fails
+//     DB::table('inbound_logs')->insert([
+//         'from'       => $from,
+//         'to'         => $to,
+//         'subject'    => $subject,
+//         'created_at' => now(),
+//         'updated_at' => now(),
+//     ]);
 
-//     $email->forward($recipient);
+//     Log::info('📩 Email received', compact('from','to','subject'));
 
-// }
-// };
-//forward
-//     Mail::to($recipients)
-//         ->send(new ForwardedEmail(subject: $subject, body: $body, attachments: $attachments));
+//     // forward (remember: sandbox can only send to authorized recipients)
+//     foreach (['dukeofmetal@outlook.com'] as $recipient) {
+//         Log::info("Forwarding to: {$recipient}");
+//         $email->forward($recipient);
+//     }
 // });
-
-Mailbox::from('{any}@sandbox8404ad9885484827b737ba4dcaf6007d.mailgun.org', function (InboundEmail $email){
-    $parentEmail = ParentEmail::where('email', $email->to())->firstOrFail();
-
-    foreach ($parentEmail->childEmails as $childEmail) {
-        $email->forward($childEmail->email);
-    }
-});
-

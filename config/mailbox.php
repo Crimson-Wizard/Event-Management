@@ -6,15 +6,9 @@ return [
      * The driver to use when listening for incoming emails.
      * It defaults to the mail driver that you are using.
      *
-     * Supported drivers: "log", "mailgun", "sendgrid", "postmark"
+     * Supported drivers: "log", "mailgun", "sendgrid"
      */
-    'driver' => 'mailgun',
-
-    /*
-     * The model class to use when converting an incoming email to a message.
-     * It must extend the default model class
-     */
-    'model' => \BeyondCode\Mailbox\InboundEmail::class,
+    'driver' => env('MAILBOX_DRIVER', 'log'),
 
     /*
      * The path for driver specific routes. This is where
@@ -29,7 +23,6 @@ return [
      * The amount of days that incoming emails should be stored in your
      * application. You can use the cleanup artisan command to
      * delete all older inbound emails on a regular basis.
-     * Set to INF to disable the cleanup artisan command.
      */
     'store_incoming_emails_for_days' => 7,
 
@@ -51,7 +44,7 @@ return [
      */
     'basic_auth' => [
         'username' => env('MAILBOX_HTTP_USERNAME', 'laravel-mailbox'),
-        'password' => env('MAILBOX_HTTP_PASSWORD'),
+        'password' => env('MAILBOX_HTTP_PASSWORD')
     ],
 
     /*
@@ -63,6 +56,6 @@ return [
             'key' => env('MAILBOX_MAILGUN_KEY'),
         ],
 
-    ],
+    ]
 
 ];
